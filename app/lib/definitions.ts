@@ -115,3 +115,19 @@ export type InvoiceForm = {
   amount: number;
   status: 'pending' | 'paid';
 };
+
+export type ReviewsTableType = {
+  id: string;
+  product_id: string;
+  user_id: string;
+  content: string;
+  // Add any other fields you need
+};
+
+export type FormattedReviewsTable = {
+  id: string;
+  product_name: string;
+  user_name: string;
+  content: string;
+  // Add any other formatted fields
+};
