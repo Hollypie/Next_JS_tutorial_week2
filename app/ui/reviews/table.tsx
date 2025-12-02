@@ -31,7 +31,6 @@ export default async function ReviewsTable({
                       <div>
                         <div className="mb-2 flex items-center">
                           <div className="flex items-center gap-3">
-                            <p>{review.title}</p>
                           </div>
                         </div>
                       </div>
