@@ -31,13 +31,14 @@ export default async function ReviewsTable({
                       <div>
                         <div className="mb-2 flex items-center">
                           <div className="flex items-center gap-3">
+                            <p className="text-sm text-gray-500">Review ID: {review.id}</p>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div className="flex w-full items-center justify-between border-b py-5">
-                      <div className="flex w-1/2 flex-col">
-                        <p className="font-medium">${review.content}</p>
+                      <div className="flex w-full flex-col">
+                        <p className="font-medium">{review.content}</p>
                       </div>
                     </div>
                   </div>
@@ -47,10 +48,10 @@ export default async function ReviewsTable({
                 <thead className="rounded-md bg-gray-50 text-left text-sm font-normal">
                   <tr>
                     <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                      Name
+                      Review ID
                     </th>
                     <th scope="col" className="px-3 py-5 font-medium">
-                      Price
+                      Content
                     </th>
                   </tr>
                 </thead>
@@ -60,7 +61,7 @@ export default async function ReviewsTable({
                     <tr key={review.id} className="group">
                       <td className="whitespace-nowrap bg-white py-5 pl-4 pr-3 text-sm text-black group-first-of-type:rounded-md group-last-of-type:rounded-md sm:pl-6">
                         <div className="flex items-center gap-3">
-                          <p>{review.title}</p>
+                          <p>{review.id}</p>
                         </div>
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
