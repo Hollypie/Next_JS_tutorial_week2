@@ -31,7 +31,7 @@ const UpdateInvoice = FormSchema.omit({ id: true, date: true });
 // ------------------------------
 // CREATE INVOICE
 // ------------------------------
-export type State = {
+export type InvoiceState = {
   errors?: {
     customerId?: string[];
     amount?: string[];
@@ -40,7 +40,7 @@ export type State = {
   message?: string | null;
 };
 
-export async function createInvoice(prevState: State, formData: FormData) {
+export async function createInvoice(prevState: InvoiceState, formData: FormData) {
   // Validate form using Zod
   const validatedFields = CreateInvoice.safeParse({
     customerId: formData.get('customerId'),
@@ -84,7 +84,7 @@ export async function createInvoice(prevState: State, formData: FormData) {
 // ------------------------------
 export async function updateInvoice(
   id: string,
-  prevState: State,
+  prevState: InvoiceState,
   formData: FormData,
 ) {
   const validatedFields = UpdateInvoice.safeParse({
@@ -124,6 +124,117 @@ export async function updateInvoice(
 export async function deleteInvoice(id: string) {
   await sql`DELETE FROM invoices WHERE id = ${id}`;
   revalidatePath('/dashboard/invoices');
+}
+
+// ------------------------------
+// DEFINE FORM SCHEMA
+// ------------------------------
+const ProductFormSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().min(1, { message: 'Please enter a product name.' }),
+  image_url: z.string().url({ message: 'Please enter a valid image URL.' }),
+  price: z.coerce
+    .number()
+    .gt(0, { message: 'Please enter a price greater than $0.' }),
+});
+
+// Derived schemas
+const CreateProductSchema = ProductFormSchema.omit({ id: true });
+const UpdateProductSchema = ProductFormSchema.pick({
+  name: true,
+  image_url: true,
+  price: true,
+});
+
+// ------------------------------
+// CREATE PRODUCT
+// ------------------------------
+export type ProductState = {
+  errors?: {
+    name?: string[];
+    image_url?: string[];
+    price?: string[];
+  };
+  message?: string | null;
+};
+
+export async function createProduct(prevState: ProductState, formData: FormData) {
+  const validatedFields = CreateProductSchema.safeParse({
+    name: formData.get('name'),
+    image_url: formData.get('image_url'),
+    price: formData.get('price'),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Create Product.',
+    };
+  }
+
+  const { name, image_url, price } = validatedFields.data;
+
+  try {
+    await sql`
+      INSERT INTO products (name, image_url, price)
+      VALUES (${name}, ${image_url}, ${price})
+    `;
+  } catch (error) {
+    return { message: 'Database Error: Failed to Create Product.' };
+  }
+
+  revalidatePath('/dashboard/products');
+  redirect('/dashboard/products');
+}
+
+// ------------------------------
+// UPDATE PRODUCT
+// ------------------------------
+export async function updateProduct(
+  id: string,
+  prevState: ProductState,
+  formData: FormData,
+) {
+  const validatedFields = UpdateProductSchema.safeParse({
+    name: formData.get('name'),
+    image_url: formData.get('image_url'),
+    price: formData.get('price'),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Update Product.',
+    };
+  }
+
+  const { name, image_url, price } = validatedFields.data;
+
+  try {
+    await sql`
+      UPDATE products
+      SET name = ${name}, image_url = ${image_url}, price = ${price}
+      WHERE id = ${id}
+    `;
+  } catch (error) {
+    return { message: 'Database Error: Failed to Update Product.' };
+  }
+
+  revalidatePath('/dashboard/products');
+  redirect('/dashboard/products');
+}
+
+// ------------------------------
+// DELETE PRODUCT
+// ------------------------------
+export async function deleteProduct(id: string) {
+  try {
+    await sql`DELETE FROM products WHERE id = ${id}`;
+  } catch (error) {
+    console.error('Failed to delete product:', error);
+    throw new Error('Database Error: Failed to Delete Product.');
+  }
+  revalidatePath('/dashboard/products');
 }
 
 // ------------------------------

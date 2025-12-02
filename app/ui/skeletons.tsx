@@ -216,3 +216,83 @@ export function InvoicesTableSkeleton() {
     </div>
   );
 }
+
+export function ProductSkeleton() {
+  return (
+    <tr className="animate-pulse bg-white">
+      <td className="px-4 py-5">
+        <div className="flex items-center gap-3">
+          <div className="h-8 w-8 rounded-full bg-gray-200" />
+          <div className="flex flex-col gap-2">
+            <div className="h-4 w-32 rounded bg-gray-200" />
+            <div className="h-3 w-16 rounded bg-gray-200" />
+          </div>
+        </div>
+      </td>
+      <td className="px-4 py-5">
+        <div className="h-4 w-12 rounded bg-gray-200" />
+      </td>
+    </tr>
+  );
+}
+
+export function ProductsTableSkeleton() {
+  return (
+    <div className="mt-6 flow-root">
+      <div className="inline-block min-w-full align-middle">
+        <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
+          {/* Mobile skeleton */}
+          <div className="md:hidden">
+            <ProductSkeletonMobile />
+            <ProductSkeletonMobile />
+            <ProductSkeletonMobile />
+            <ProductSkeletonMobile />
+          </div>
+
+          {/* Desktop skeleton */}
+          <table className="hidden min-w-full text-gray-900 md:table">
+            <thead className="rounded-lg text-left text-sm font-normal">
+              <tr>
+                <th className="px-4 py-5 font-medium sm:pl-6">Name</th>
+                <th className="px-3 py-5 font-medium">Price</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {/* Keep <tr> for desktop */}
+              <ProductSkeleton /> 
+              <ProductSkeleton />
+              <ProductSkeleton />
+              <ProductSkeleton />
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// app/ui/skeletons.tsx
+
+export function ProductSkeletonMobile() {
+  return (
+    <div className="mb-2 w-full rounded-md bg-white p-4 animate-pulse">
+      {/* Top section with image and name */}
+      <div className="flex items-center justify-between border-b pb-4">
+        <div className="flex items-center gap-3">
+          {/* Circle placeholder for image */}
+          <div className="h-8 w-8 rounded-full bg-gray-200" />
+          {/* Rectangle placeholder for product name */}
+          <div className="h-5 w-40 rounded-md bg-gray-200" />
+        </div>
+      </div>
+
+      {/* Bottom section with price placeholder */}
+      <div className="flex w-full items-center justify-between border-b py-5">
+        <div className="flex w-1/2 flex-col">
+          <div className="h-4 w-12 rounded-md bg-gray-200" />
+        </div>
+      </div>
+    </div>
+  );
+}
+

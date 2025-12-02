@@ -1,7 +1,11 @@
+// cSpell:ignore ILIKE
+
 import postgres from 'postgres';
 import {
   CustomerField,
   CustomersTableType,
+  ProductsTable,
+  ProductsTableType,
   InvoiceForm,
   InvoicesTable,
   LatestInvoiceRaw,
@@ -10,6 +14,53 @@ import {
 import { formatCurrency } from './utils';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
+
+export async function fetchFilteredProducts(
+  query: string,
+  currentPage: number,
+) {
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const data = await sql<ProductsTable[]>`
+      SELECT
+        id,
+        name,
+        image_url,
+        price
+      FROM products
+      WHERE
+        name ILIKE ${`%${query}%`} OR
+        price::text ILIKE ${`%${query}%`}
+      ORDER BY name ASC
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset};
+    `;
+
+    return data; // postgres returns an array directly
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch products.");
+  }
+}
+
+export async function fetchProductsPages(query: string) {
+  try {
+    const data = await sql<{ count: string }[]>`
+      SELECT COUNT(*)
+      FROM products
+      WHERE
+        name ILIKE ${`%${query}%`} OR
+        price::text ILIKE ${`%${query}%`}
+    `;
+
+    const totalPages = Math.ceil(Number(data[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total number of products.');
+  }
+}
+
 
 export async function fetchRevenue() {
   try {

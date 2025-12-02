@@ -20,13 +20,6 @@ export type Review = {
   content: string;
 };
 
-export type Product = {
-  id: string;
-  name: string;
-  image_url: string;
-  price: number;
-};
-
 export type Customer = {
   id: string;
   name: string;
@@ -68,6 +61,13 @@ export type InvoicesTable = {
   date: string;
   amount: number;
   status: 'pending' | 'paid';
+};
+
+export type ProductsTable = {
+  id: string;
+  name: string;
+  image_url: string;
+  price: number;
 };
 
 export type CustomersTableType = {
