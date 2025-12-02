@@ -11,7 +11,8 @@ export type User = {
 
 export type Review = {
   id: string;
-  title: string;
+  product_name: string;
+  user_name: string;
   content: string;
 };
 
