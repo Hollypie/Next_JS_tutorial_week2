@@ -2,36 +2,41 @@
 
 import bcrypt from 'bcrypt';
 import postgres from 'postgres';
-import { sellers, products, reviews } from '../lib/placeholder-data-handcraftedhaven';
+import { users, products, reviews } from '../lib/placeholder-data-handcraftedhaven';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
-async function seedSellers() {
+// ------------------------------
+// Seed Users
+// ------------------------------
+async function seedUsers() {
   await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
   await sql`
-    CREATE TABLE IF NOT EXISTS sellers (
+    CREATE TABLE IF NOT EXISTS users (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
       email TEXT NOT NULL UNIQUE,
       password TEXT NOT NULL,
-      account_type TEXT NOT NULL
+      account_type TEXT NOT NULL CHECK (account_type IN ('artisan', 'customer'))
     );
   `;
 
   return Promise.all(
-    sellers.map(async (seller) => {
-      const hashedPassword = await bcrypt.hash(seller.password, 10);
+    users.map(async (user) => {
+      const hashedPassword = await bcrypt.hash(user.password, 10);
       return sql`
-        INSERT INTO sellers (id, name, email, password, account_type)
-        VALUES (${seller.id}, ${seller.name}, ${seller.email}, ${hashedPassword}, ${seller.account_type})
+        INSERT INTO users (id, name, email, password, account_type)
+        VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword}, ${user.account_type})
         ON CONFLICT (id) DO NOTHING;
       `;
     })
   );
 }
 
+// ------------------------------
+// Seed Products
+// ------------------------------
 async function seedProducts() {
-  await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
   await sql`
     CREATE TABLE IF NOT EXISTS products (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -52,13 +57,15 @@ async function seedProducts() {
   );
 }
 
+// ------------------------------
+// Seed Reviews
+// ------------------------------
 async function seedReviews() {
-  await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
   await sql`
     CREATE TABLE IF NOT EXISTS reviews (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-      product_name TEXT NOT NULL,
-      user_name TEXT NOT NULL,
+      product_id UUID REFERENCES products(id),
+      user_id UUID REFERENCES users(id),
       content TEXT NOT NULL
     );
   `;
@@ -66,21 +73,25 @@ async function seedReviews() {
   return Promise.all(
     reviews.map(
       (review) => sql`
-        INSERT INTO reviews (id, product_name, user_name, content)
-        VALUES (${review.id}, ${review.product_name}, ${review.user_name}, ${review.content})
+        INSERT INTO reviews (id, product_id, user_id, content)
+        VALUES (${review.id}, ${review.product_id}, ${review.user_id}, ${review.content})
         ON CONFLICT (id) DO NOTHING;
       `
     )
   );
 }
 
+// ------------------------------
+// Seed All Data
+// ------------------------------
 export async function GET() {
   try {
-    await sql.begin(async (sql) => [
-      seedSellers(),
-      seedProducts(),
-      seedReviews(),
-    ]);
+    await sql.begin(async () => {
+      // Run each seed sequentially to respect foreign key dependencies
+      await seedUsers();
+      await seedProducts();
+      await seedReviews();
+    });
 
     return Response.json({ message: 'Database seeded successfully' });
   } catch (error) {

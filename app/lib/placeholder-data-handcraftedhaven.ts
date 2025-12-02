@@ -2,10 +2,11 @@
 // Sample placeholder data for Handcrafted Haven project
 // cSpell:ignore handcraftedhaven
 
-import { Seller, Product, Review } from './definitions';
+import { User, Product, Review } from './definitions';
 
-// --- Sellers ---
-const sellers: Seller[] = [
+// --- Users ---
+const users: User[] = [
+  // Artisans (sellers)
   {
     id: '1f5c8b32-1d2a-4d57-9b8a-1e6b0f9a2a01',
     name: 'Olivia Woodcraft',
@@ -26,6 +27,51 @@ const sellers: Seller[] = [
     email: 'sophia@handcrafted.com',
     password: 'password123',
     account_type: 'artisan',
+  },
+  {
+    id: '410544b2-4001-4271-9855-fec4b6a6442a',
+    name: 'User',
+    email: 'user@nextmail.com',
+    password: '123456',
+    account_type: 'artisan',
+    },
+  
+    // Customers
+  
+  {
+    id: 'c1d2e3f4-1111-2222-3333-444455556666',
+    name: 'Alice Johnson',
+    email: 'alice@test.com',
+    password: 'password123',
+    account_type: 'customer',
+  },
+  {
+    id: 'c2d2e3f4-1111-2222-3333-444455556667',
+    name: 'Mark Spencer',
+    email: 'mark@test.com',
+    password: 'password123',
+    account_type: 'customer',
+  },
+  {
+    id: 'c3d2e3f4-1111-2222-3333-444455556668',
+    name: 'Nina Patel',
+    email: 'nina@test.com',
+    password: 'password123',
+    account_type: 'customer',
+  },
+  {
+    id: 'c4d2e3f4-1111-2222-3333-444455556669',
+    name: 'Tommy Lee',
+    email: 'tommy@test.com',
+    password: 'password123',
+    account_type: 'customer',
+  },
+  {
+    id: 'c5d2e3f4-1111-2222-3333-444455556670',
+    name: 'Emily Davis',
+    email: 'emily@test.com',
+    password: 'password123',
+    account_type: 'customer',
   },
 ];
 
@@ -67,34 +113,34 @@ const products: Product[] = [
 const reviews: Review[] = [
   {
     id: 'r1',
-    product_name: 'Handmade Wooden Bowl',
-    user_name: 'Alice Johnson',
+    product_id: 'p1',
+    user_id: 'c1d2e3f4-1111-2222-3333-444455556666',
     content: 'Beautiful craftsmanship! Love the natural finish.',
   },
   {
     id: 'r2',
-    product_name: 'Leather Journal',
-    user_name: 'Mark Spencer',
+    product_id: 'p2',
+    user_id: 'c2d2e3f4-1111-2222-3333-444455556667',
     content: 'The leather quality is excellent, very durable.',
   },
   {
     id: 'r3',
-    product_name: 'Ceramic Vase',
-    user_name: 'Nina Patel',
+    product_id: 'p3',
+    user_id: 'c3d2e3f4-1111-2222-3333-444455556668',
     content: 'Looks amazing on my shelf, exactly as pictured.',
   },
   {
     id: 'r4',
-    product_name: 'Knitted Scarf',
-    user_name: 'Tommy Lee',
+    product_id: 'p4',
+    user_id: 'c4d2e3f4-1111-2222-3333-444455556669',
     content: 'Warm and cozy! The colors are vibrant.',
   },
   {
     id: 'r5',
-    product_name: 'Handcrafted Candle',
-    user_name: 'Emily Davis',
+    product_id: 'p5',
+    user_id: 'c5d2e3f4-1111-2222-3333-444455556670',
     content: 'Lovely scent and long-lasting burn time.',
   },
 ];
 
-export { sellers, products, reviews };
+export { users, products, reviews };
