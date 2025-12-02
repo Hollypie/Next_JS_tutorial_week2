@@ -1,4 +1,4 @@
-// placeholder-data.ts
+// placeholder-data-handcraftedhaven.ts
 // Sample placeholder data for Handcrafted Haven project
 // cSpell:ignore handcraftedhaven
 
@@ -34,10 +34,9 @@ const users: User[] = [
     email: 'user@nextmail.com',
     password: '123456',
     account_type: 'artisan',
-    },
-  
-    // Customers
-  
+  },
+
+  // Customers
   {
     id: 'c1d2e3f4-1111-2222-3333-444455556666',
     name: 'Alice Johnson',
@@ -78,31 +77,31 @@ const users: User[] = [
 // --- Products ---
 const products: Product[] = [
   {
-    id: 'p1',
+    id: 'a1111111-1111-1111-1111-111111111111',
     name: 'Handmade Wooden Bowl',
     image_url: '/products/wooden-bowl.jpg',
-    price: 4500, // cents ($45.00)
+    price: 4500,
   },
   {
-    id: 'p2',
+    id: 'b2222222-2222-2222-2222-222222222222',
     name: 'Leather Journal',
     image_url: '/products/leather-journal.jpg',
     price: 3200,
   },
   {
-    id: 'p3',
+    id: 'c3333333-3333-3333-3333-333333333333',
     name: 'Ceramic Vase',
     image_url: '/products/ceramic-vase.jpg',
     price: 5200,
   },
   {
-    id: 'p4',
+    id: 'd4444444-4444-4444-4444-444444444444',
     name: 'Knitted Scarf',
     image_url: '/products/knitted-scarf.jpg',
     price: 2800,
   },
   {
-    id: 'p5',
+    id: 'e5555555-5555-5555-5555-555555555555',
     name: 'Handcrafted Candle',
     image_url: '/products/handcrafted-candle.jpg',
     price: 1500,
@@ -112,32 +111,32 @@ const products: Product[] = [
 // --- Reviews ---
 const reviews: Review[] = [
   {
-    id: 'r1',
-    product_id: 'p1',
+    id: 'f6666666-6666-6666-6666-666666666666',
+    product_id: 'a1111111-1111-1111-1111-111111111111',
     user_id: 'c1d2e3f4-1111-2222-3333-444455556666',
     content: 'Beautiful craftsmanship! Love the natural finish.',
   },
   {
-    id: 'r2',
-    product_id: 'p2',
+    id: 'f7777777-7777-7777-7777-777777777777',
+    product_id: 'b2222222-2222-2222-2222-222222222222',
     user_id: 'c2d2e3f4-1111-2222-3333-444455556667',
     content: 'The leather quality is excellent, very durable.',
   },
   {
-    id: 'r3',
-    product_id: 'p3',
+    id: 'f8888888-8888-8888-8888-888888888888',
+    product_id: 'c3333333-3333-3333-3333-333333333333',
     user_id: 'c3d2e3f4-1111-2222-3333-444455556668',
     content: 'Looks amazing on my shelf, exactly as pictured.',
   },
   {
-    id: 'r4',
-    product_id: 'p4',
+    id: 'f9999999-9999-9999-9999-999999999999',
+    product_id: 'd4444444-4444-4444-4444-444444444444',
     user_id: 'c4d2e3f4-1111-2222-3333-444455556669',
     content: 'Warm and cozy! The colors are vibrant.',
   },
   {
-    id: 'r5',
-    product_id: 'p5',
+    id: 'f0000000-0000-0000-0000-000000000000',
+    product_id: 'e5555555-5555-5555-5555-555555555555',
     user_id: 'c5d2e3f4-1111-2222-3333-444455556670',
     content: 'Lovely scent and long-lasting burn time.',
   },
