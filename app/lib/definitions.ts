@@ -9,6 +9,27 @@ export type User = {
   password: string;
 };
 
+export type Review = {
+  id: string;
+  title: string;
+  content: string;
+};
+
+export type Product = {
+  id: string;
+  name: string;
+  image_url: string;
+  price: number;
+};
+
+export type Seller = {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  account_type: string;
+};
+
 export type Customer = {
   id: string;
   name: string;

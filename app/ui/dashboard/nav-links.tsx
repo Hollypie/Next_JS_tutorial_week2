@@ -1,6 +1,9 @@
 'use client';
 
 import {
+  ShoppingBagIcon,
+  IdentificationIcon,
+  ChatBubbleLeftRightIcon,
   UserGroupIcon,
   HomeIcon,
   DocumentDuplicateIcon,
@@ -12,7 +15,13 @@ import clsx from 'clsx';
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
 const links = [
-  { name: 'Home', href: '/dashboard', icon: HomeIcon },
+  { name: 'Home', href: '/home', icon: HomeIcon },
+  { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
+  
+  { name: 'Products', href: '/dashboard/products', icon: ShoppingBagIcon },
+  { name: 'Sellers', href: '/dashboard/sellers', icon: IdentificationIcon },
+  { name: 'Reviews', href: '/dashboard/reviews', icon: ChatBubbleLeftRightIcon },
+  { name: 'About', href: '/dashboard/about', icon: UserGroupIcon },
   {
     name: 'Invoices',
     href: '/dashboard/invoices',
