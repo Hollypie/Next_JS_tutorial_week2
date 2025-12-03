@@ -18,6 +18,8 @@ import { formatCurrency } from './utils';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
+const ITEMS_PER_PAGE = 6;
+
 export async function fetchFilteredProducts(
   query: string,
   currentPage: number,
@@ -140,7 +142,6 @@ export async function fetchCardData() {
   }
 }
 
-const ITEMS_PER_PAGE = 6;
 export async function fetchFilteredInvoices(
   query: string,
   currentPage: number,
@@ -298,25 +299,17 @@ export async function fetchProductById(
   id: string
 ): Promise<(Product & { reviews: (Review & { user_name: string })[] }) | null> {
   try {
-    console.log('Fetching product with id:', id);
-    
     // Fetch the product
-    const productData = await sql<Product[]>`
+    const [product] = await sql<Product[]>`
       SELECT id, name, image_url, price, description
       FROM products
       WHERE id = ${id}
       LIMIT 1
     `;
-    
-    console.log('Product data:', productData);
-    
-    const product = productData[0];
-    if (!product) {
-      console.log('No product found');
-      return null;
-    }
 
-    // Fetch the reviews for this product
+    if (!product) return null;
+
+    // Fetch the reviews for this product with user names
     const reviewsData = await sql<{
       id: string;
       content: string;
@@ -330,11 +323,8 @@ export async function fetchProductById(
       ORDER BY r.id DESC
     `;
 
-    console.log('Reviews data:', reviewsData);
-    console.log('Number of reviews found:', reviewsData.length);
-
-    // Map to Review[] type with user_name
-    const reviews = reviewsData.map(r => ({
+    // Map to Review[] with user_name
+    const reviews: (Review & { user_name: string })[] = reviewsData.map(r => ({
       id: r.id,
       product_id: id,
       user_id: r.user_id,
@@ -342,15 +332,11 @@ export async function fetchProductById(
       user_name: r.user_name,
     }));
 
-    const result = {
+    return {
       ...product,
       price: product.price / 100,
       reviews,
     };
-    
-    console.log('Final result:', result);
-
-    return result;
   } catch (error) {
     console.error('Database Error in fetchProductById:', error);
     throw new Error('Failed to fetch product.');

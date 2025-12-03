@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import postgres from 'postgres';
 import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
+import { Review } from './definitions';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
@@ -275,5 +276,37 @@ export async function authenticate(
       }
     }
     throw error;
+  }
+}
+
+// ------------------------------
+// SUBMIT REVIEW
+// ------------------------------
+
+export async function submitReview(
+  productId: string,
+  content: string,
+  userId: string
+): Promise<Review & { user_name: string }> {
+  try {
+    // Insert the review
+    const [review] = await sql<Review[]>`
+      INSERT INTO reviews (product_id, user_id, content)
+      VALUES (${productId}, ${userId}, ${content})
+      RETURNING id, product_id, user_id, content;
+    `;
+
+    // Fetch the user's name
+    const [user] = await sql<{ name: string }[]>`
+      SELECT name FROM users WHERE id = ${userId};
+    `;
+
+    return {
+      ...review,
+      user_name: user?.name || `User ${userId}`,
+    };
+  } catch (error) {
+    console.error('Failed to submit review:', error);
+    throw new Error('Database Error: Failed to submit review.');
   }
 }

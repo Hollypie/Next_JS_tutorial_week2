@@ -1,6 +1,7 @@
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { deleteProduct } from '@/app/lib/actions';
+import { Review } from '@/app/lib/definitions';
 
 export function CreateProduct() {
   return (
@@ -36,3 +37,4 @@ export function DeleteProduct({ id }: { id: string }) {
     </form>
   );
 }
+
