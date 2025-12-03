@@ -13,13 +13,13 @@ export default function EditProductForm({
 }) {
   const initialState: ProductState = { message: null, errors: {} };
 
-  // Bind product ID to the update action
   const updateProductWithId = updateProduct.bind(null, product.id);
   const [state, formAction] = useActionState(updateProductWithId, initialState);
 
   return (
     <form action={formAction} className="space-y-6">
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
+
         {/* Product Name */}
         <div className="mb-4">
           <label htmlFor="name" className="mb-2 block text-sm font-medium">
@@ -30,15 +30,12 @@ export default function EditProductForm({
             name="name"
             type="text"
             defaultValue={product.name}
-            placeholder="Enter product name"
-            className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm outline-2 placeholder:text-gray-500"
+            className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm"
             aria-describedby="name-error"
           />
           <div id="name-error" aria-live="polite" aria-atomic="true">
             {state.errors?.name?.map((error: string) => (
-              <p className="mt-2 text-sm text-red-500" key={error}>
-                {error}
-              </p>
+              <p className="mt-2 text-sm text-red-500" key={error}>{error}</p>
             ))}
           </div>
         </div>
@@ -53,15 +50,12 @@ export default function EditProductForm({
             name="image_url"
             type="text"
             defaultValue={product.image_url}
-            placeholder="/images/product.jpg"
-            className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm outline-2 placeholder:text-gray-500"
+            className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm"
             aria-describedby="image-error"
           />
           <div id="image-error" aria-live="polite" aria-atomic="true">
             {state.errors?.image_url?.map((error: string) => (
-              <p className="mt-2 text-sm text-red-500" key={error}>
-                {error}
-              </p>
+              <p className="mt-2 text-sm text-red-500" key={error}>{error}</p>
             ))}
           </div>
         </div>
@@ -77,18 +71,38 @@ export default function EditProductForm({
             type="number"
             step="0.01"
             defaultValue={product.price}
-            placeholder="Enter product price"
-            className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm outline-2 placeholder:text-gray-500"
+            className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm"
             aria-describedby="price-error"
           />
           <div id="price-error" aria-live="polite" aria-atomic="true">
             {state.errors?.price?.map((error: string) => (
+              <p className="mt-2 text-sm text-red-500" key={error}>{error}</p>
+            ))}
+          </div>
+        </div>
+
+        {/* Description - NEW */}
+        <div className="mb-4">
+          <label htmlFor="description" className="mb-2 block text-sm font-medium">
+            Description
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            defaultValue={product.description}
+            placeholder="Enter product description"
+            className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm h-28"
+            aria-describedby="description-error"
+          />
+          <div id="description-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.description?.map((error: string) => (
               <p className="mt-2 text-sm text-red-500" key={error}>
                 {error}
               </p>
             ))}
           </div>
         </div>
+
       </div>
 
       {/* Buttons */}

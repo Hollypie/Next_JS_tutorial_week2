@@ -9,6 +9,9 @@ interface ProductDetailsTableProps {
     name: string;
     image_url: string;
     price: number;
+    description?: string;      // <-- added
+    category?: string;         // <-- optional
+    inventory?: number;        // <-- optional
   };
 }
 
@@ -16,21 +19,46 @@ export default function ProductDetailsTable({ product }: ProductDetailsTableProp
   return (
     <div className="space-y-6">
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
+
         {/* Product Name */}
         <div className="mb-4">
           <h2 className="text-lg font-medium text-gray-900">Product Name</h2>
           <p className="mt-2 text-sm text-gray-700">{product.name}</p>
         </div>
 
+        {/* Description */}
+        {product.description && (
+          <div className="mb-4">
+            <h2 className="text-lg font-medium text-gray-900">Description</h2>
+            <p className="mt-2 text-sm text-gray-700">{product.description}</p>
+          </div>
+        )}
+
+        {/* Category */}
+        {product.category && (
+          <div className="mb-4">
+            <h2 className="text-lg font-medium text-gray-900">Category</h2>
+            <p className="mt-2 text-sm text-gray-700">{product.category}</p>
+          </div>
+        )}
+
+        {/* Inventory */}
+        {typeof product.inventory === "number" && (
+          <div className="mb-4">
+            <h2 className="text-lg font-medium text-gray-900">Inventory</h2>
+            <p className="mt-2 text-sm text-gray-700">{product.inventory}</p>
+          </div>
+        )}
+
         {/* Image */}
         <div className="mb-4">
           <h2 className="text-lg font-medium text-gray-900">Product Image</h2>
           <div className="mt-2 w-48 h-48 relative rounded-md overflow-hidden border border-gray-200">
             <Image
-                src={product.image_url || '/placeholder.jpg'}
-                alt={product.name}
-                fill
-                className="object-cover"
+              src={product.image_url || '/placeholder.jpg'}
+              alt={product.name}
+              fill
+              className="object-cover"
             />
           </div>
         </div>
@@ -40,6 +68,7 @@ export default function ProductDetailsTable({ product }: ProductDetailsTableProp
           <h2 className="text-lg font-medium text-gray-900">Price</h2>
           <p className="mt-2 text-sm text-gray-700">${product.price.toFixed(2)}</p>
         </div>
+
       </div>
 
       {/* Buttons */}

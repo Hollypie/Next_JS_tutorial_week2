@@ -75,38 +75,50 @@ const users: User[] = [
 ];
 
 // --- Products ---
+// --- Products ---
 const products: Product[] = [
   {
     id: 'a1111111-1111-1111-1111-111111111111',
     name: 'Handmade Wooden Bowl',
     image_url: '/products/wooden-bowl.jpg',
     price: 4500,
+    description:
+      'A beautifully handcrafted wooden bowl made from sustainably sourced hardwood. Each piece is carved, sanded, and finished by hand, creating a smooth, natural texture perfect for serving or display.'
   },
   {
     id: 'b2222222-2222-2222-2222-222222222222',
     name: 'Leather Journal',
     image_url: '/products/leather-journal.jpg',
     price: 3200,
+    description:
+      'A premium handcrafted leather journal featuring thick, lay-flat pages ideal for sketching, writing, or daily reflections. The natural leather cover ages beautifully, developing a unique patina over time.'
   },
   {
     id: 'c3333333-3333-3333-3333-333333333333',
     name: 'Ceramic Vase',
     image_url: '/products/ceramic-vase.jpg',
     price: 5200,
+    description:
+      'A hand-thrown ceramic vase glazed in earthy, warm tones. Its organic silhouette and subtle variations make it a perfect centerpiece for fresh florals or decorative greenery.'
   },
   {
     id: 'd4444444-4444-4444-4444-444444444444',
     name: 'Knitted Scarf',
     image_url: '/products/knitted-scarf.jpg',
     price: 2800,
+    description:
+      'A cozy, hand-knitted scarf created with soft, high-quality yarn. Its timeless pattern and gentle drape make it an essential accessory for cooler seasons.'
   },
   {
     id: 'e5555555-5555-5555-5555-555555555555',
     name: 'Handcrafted Candle',
     image_url: '/products/handcrafted-candle.jpg',
     price: 1500,
-  },
+    description:
+      'A small-batch, hand-poured candle made with natural wax and infused with subtle botanical fragrances. Designed to bring warmth and calm to any space.'
+  }
 ];
+
 
 // --- Reviews ---
 const reviews: Review[] = [

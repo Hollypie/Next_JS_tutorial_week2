@@ -50,7 +50,8 @@ async function seedProducts() {
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       name TEXT NOT NULL,
       image_url TEXT NOT NULL,
-      price INT NOT NULL
+      price INT NOT NULL,
+      description TEXT NOT NULL
     );
   `;
 
@@ -58,8 +59,8 @@ async function seedProducts() {
 
   for (const product of products) {
     const result = await sql`
-      INSERT INTO products (id, name, image_url, price)
-      VALUES (${product.id}, ${product.name}, ${product.image_url}, ${product.price})
+      INSERT INTO products (id, name, image_url, price, description)
+      VALUES (${product.id}, ${product.name}, ${product.image_url}, ${product.price}, ${product.description})
       ON CONFLICT (id) DO NOTHING;
     `;
     inserted += result.count;

@@ -28,7 +28,8 @@ export async function fetchFilteredProducts(
         id,
         name,
         image_url,
-        price
+        price,
+        description
       FROM products
       WHERE
         name ILIKE ${`%${query}%`} OR
@@ -275,12 +276,13 @@ export type Product = {
   name: string;
   image_url: string;
   price: number;
+  description: string;
 };
 
 export async function fetchProducts(): Promise<Product[]> {
   try {
     const data = await sql`
-      SELECT id, name, image_url, price
+      SELECT id, name, image_url, price, description
       FROM products
       ORDER BY name ASC
     `;
@@ -301,7 +303,7 @@ export async function fetchProducts(): Promise<Product[]> {
 export async function fetchProductById(id: string): Promise<Product | null> {
   try {
     const data = await sql`
-      SELECT id, name, image_url, price
+      SELECT id, name, image_url, price, description
       FROM products
       WHERE id = ${id}
       LIMIT 1

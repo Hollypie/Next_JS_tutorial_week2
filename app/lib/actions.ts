@@ -115,6 +115,11 @@ export async function deleteInvoice(id: string) {
 const ProductFormSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(1, { message: 'Please enter a product name.' }),
+
+  description: z
+    .string()
+    .min(1, { message: 'Please enter a product description.' }),
+
   image_url: z
     .string()
     .min(1, 'Please enter an image URL.')
@@ -122,10 +127,12 @@ const ProductFormSchema = z.object({
       (val) => /^\/|^https?:\/\//.test(val),
       'Use a relative path like /products/product.jpg or a full URL.'
     ),
+
   price: z.coerce
     .number()
     .gt(0, { message: 'Please enter a price greater than $0.' }),
 });
+
 
 // Derived schemas
 const CreateProductSchema = ProductFormSchema.omit({ id: true });
@@ -133,6 +140,7 @@ const UpdateProductSchema = ProductFormSchema.pick({
   name: true,
   image_url: true,
   price: true,
+  description: true,
 });
 
 // ------------------------------
@@ -143,6 +151,7 @@ export type ProductState = {
     name?: string[];
     image_url?: string[];
     price?: string[];
+    description?: string[];
   };
   message?: string | null;
 };
@@ -152,6 +161,7 @@ export async function createProduct(prevState: ProductState, formData: FormData)
     name: formData.get('name'),
     image_url: formData.get('image_url'),
     price: formData.get('price'),
+    description: formData.get('description'),
   });
 
   if (!validatedFields.success) {
@@ -161,12 +171,12 @@ export async function createProduct(prevState: ProductState, formData: FormData)
     };
   }
 
-  const { name, image_url, price } = validatedFields.data;
+  const { name, image_url, price, description } = validatedFields.data;
 
   try {
     await sql`
-      INSERT INTO products (name, image_url, price)
-      VALUES (${name}, ${image_url}, ${price})
+      INSERT INTO products (name, image_url, price, description)
+      VALUES (${name}, ${image_url}, ${price}, ${description})
     `;
   } catch (error) {
     return { message: 'Database Error: Failed to Create Product.' };
@@ -188,6 +198,7 @@ export async function updateProduct(
     name: formData.get('name'),
     image_url: formData.get('image_url'),
     price: formData.get('price'),
+    description: formData.get('description'),
   });
 
   if (!validatedFields.success) {
@@ -197,12 +208,12 @@ export async function updateProduct(
     };
   }
 
-  const { name, image_url, price } = validatedFields.data;
+  const { name, image_url, price, description } = validatedFields.data;
 
   try {
     await sql`
       UPDATE products
-      SET name = ${name}, image_url = ${image_url}, price = ${price}
+      SET name = ${name}, image_url = ${image_url}, price = ${price}, description = ${description}
       WHERE id = ${id}
     `;
   } catch (error) {

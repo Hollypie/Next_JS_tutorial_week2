@@ -13,6 +13,14 @@ export type User = {
   account_type: 'artisan' | 'customer'; // e.g., 'artisan' or 'customer'
 };
 
+export type Product = {
+  id: string;
+  name: string;
+  image_url: string;
+  price: number;
+  description: string;
+};
+
 export type Review = {
   id: string;
   product_id: string; // now references Product.id
@@ -68,6 +76,7 @@ export type ProductsTable = {
   name: string;
   image_url: string;
   price: number;
+  description: string;
 };
 
 export type CustomersTableType = {
@@ -85,6 +94,7 @@ export type ProductsTableType = {
   name: string;
   image_url: string;
   price: number;
+  description: string;
 };
 
 export type FormattedCustomersTable = {
@@ -102,6 +112,7 @@ export type FormattedProductsTable = {
   name: string;
   image_url: string;
   price: number;
+  description: string;
 };
 
 export type CustomerField = {
@@ -121,6 +132,7 @@ export type ProductForm = {
   name: string;
   image_url: string;
   price: number;
+  description: string;
 };
 
 export type ReviewsTableType = {
