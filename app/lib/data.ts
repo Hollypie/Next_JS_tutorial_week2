@@ -7,6 +7,7 @@ import {
   ProductsTable,
   ProductsTableType,
   InvoiceForm,
+  ProductForm,
   InvoicesTable,
   LatestInvoiceRaw,
   Revenue,
@@ -266,5 +267,56 @@ export async function fetchFilteredCustomers(query: string) {
   } catch (err) {
     console.error('Database Error:', err);
     throw new Error('Failed to fetch customer table.');
+  }
+}
+
+export type Product = {
+  id: string;
+  name: string;
+  image_url: string;
+  price: number;
+};
+
+export async function fetchProducts(): Promise<Product[]> {
+  try {
+    const data = await sql`
+      SELECT id, name, image_url, price
+      FROM products
+      ORDER BY name ASC
+    `;
+
+    // First assert as unknown, then map to Product[]
+    const products = (data as unknown as Product[]).map((product) => ({
+      ...product,
+      price: product.price / 100, // convert cents to dollars
+    }));
+
+    return products;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch products.');
+  }
+}
+
+export async function fetchProductById(id: string): Promise<Product | null> {
+  try {
+    const data = await sql`
+      SELECT id, name, image_url, price
+      FROM products
+      WHERE id = ${id}
+      LIMIT 1
+    `;
+
+    const product = (data as unknown as Product[])[0];
+
+    if (!product) return null;
+
+    return {
+      ...product,
+      price: product.price / 100,
+    };
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch product.');
   }
 }

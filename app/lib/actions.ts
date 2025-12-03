@@ -9,24 +9,7 @@ import { AuthError } from 'next-auth';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
-// ❗ Define FormSchema FIRST
-const FormSchema = z.object({
-  id: z.string(),
-  customerId: z.string({
-    invalid_type_error: 'Please select a customer.',
-  }),
-  amount: z.coerce
-    .number()
-    .gt(0, { message: 'Please enter an amount greater than $0.' }),
-  status: z.enum(['pending', 'paid'], {
-    invalid_type_error: 'Please select an invoice status.',
-  }),
-  date: z.string(),
-});
 
-// Then create your derived schemas
-const CreateInvoice = FormSchema.omit({ id: true, date: true });
-const UpdateInvoice = FormSchema.omit({ id: true, date: true });
 
 // ------------------------------
 // CREATE INVOICE
@@ -132,7 +115,13 @@ export async function deleteInvoice(id: string) {
 const ProductFormSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(1, { message: 'Please enter a product name.' }),
-  image_url: z.string().url({ message: 'Please enter a valid image URL.' }),
+  image_url: z
+    .string()
+    .min(1, 'Please enter an image URL.')
+    .refine(
+      (val) => /^\/|^https?:\/\//.test(val),
+      'Use a relative path like /products/product.jpg or a full URL.'
+    ),
   price: z.coerce
     .number()
     .gt(0, { message: 'Please enter a price greater than $0.' }),

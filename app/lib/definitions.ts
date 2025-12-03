@@ -116,6 +116,13 @@ export type InvoiceForm = {
   status: 'pending' | 'paid';
 };
 
+export type ProductForm = {
+  id: string;
+  name: string;
+  image_url: string;
+  price: number;
+};
+
 export type ReviewsTableType = {
   id: string;
   product_id: string;
