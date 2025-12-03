@@ -2,6 +2,8 @@
 
 import postgres from 'postgres';
 import {
+  Product,
+  Review,
   CustomerField,
   CustomersTableType,
   ProductsTable,
@@ -271,14 +273,6 @@ export async function fetchFilteredCustomers(query: string) {
   }
 }
 
-export type Product = {
-  id: string;
-  name: string;
-  image_url: string;
-  price: number;
-  description: string;
-};
-
 export async function fetchProducts(): Promise<Product[]> {
   try {
     const data = await sql`
@@ -300,22 +294,48 @@ export async function fetchProducts(): Promise<Product[]> {
   }
 }
 
-export async function fetchProductById(id: string): Promise<Product | null> {
+export async function fetchProductById(
+  id: string
+): Promise<(Product & { reviews: (Review & { user_name: string })[] }) | null> {
   try {
-    const data = await sql`
+    // Fetch the product
+    const productData = await sql<Product[]>`
       SELECT id, name, image_url, price, description
       FROM products
       WHERE id = ${id}
       LIMIT 1
     `;
-
-    const product = (data as unknown as Product[])[0];
-
+    const product = productData[0];
     if (!product) return null;
 
+    // Fetch the reviews for this product
+    const reviewsData = await sql<{
+      id: string;
+      content: string;
+      user_id: string;
+      user_name: string;
+    }[]>`
+      SELECT r.id, r.content, r.user_id, u.name AS user_name
+      FROM reviews r
+      JOIN users u ON r.user_id = u.id
+      WHERE r.product_id = ${id}
+      ORDER BY r.id DESC
+    `;
+
+    // Map to Review[] type with user_name
+    const reviews = reviewsData.map(r => ({
+      id: r.id,
+      product_id: id,
+      user_id: r.user_id,
+      content: r.content,
+      user_name: r.user_name, // Include user_name
+    }));
+
+    // Return the product with reviews, converting price to dollars
     return {
       ...product,
       price: product.price / 100,
+      reviews,
     };
   } catch (error) {
     console.error('Database Error:', error);

@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { Review } from '@/app/lib/definitions';
 
 interface ProductDetailsTableProps {
   product: {
@@ -9,13 +10,17 @@ interface ProductDetailsTableProps {
     name: string;
     image_url: string;
     price: number;
-    description?: string;      // <-- added
-    category?: string;         // <-- optional
-    inventory?: number;        // <-- optional
+    description?: string;
+    category?: string;
+    inventory?: number;
+    reviews: Review[]; // Reviews are now part of the product object
   };
 }
 
 export default function ProductDetailsTable({ product }: ProductDetailsTableProps) {
+  // Reviews are already attached to the product
+  const productReviews = product.reviews || [];
+
   return (
     <div className="space-y-6">
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
@@ -59,6 +64,7 @@ export default function ProductDetailsTable({ product }: ProductDetailsTableProp
               alt={product.name}
               fill
               className="object-cover"
+              sizes="192px"
             />
           </div>
         </div>
@@ -67,6 +73,27 @@ export default function ProductDetailsTable({ product }: ProductDetailsTableProp
         <div className="mb-4">
           <h2 className="text-lg font-medium text-gray-900">Price</h2>
           <p className="mt-2 text-sm text-gray-700">${product.price.toFixed(2)}</p>
+        </div>
+
+        {/* Reviews */}
+        <div className="mb-4">
+          <h2 className="text-lg font-medium text-gray-900">
+            Reviews {productReviews.length > 0 && `(${productReviews.length})`}
+          </h2>
+          {productReviews.length > 0 ? (
+            <div className="mt-2 space-y-4">
+              {productReviews.map((review) => (
+                <div key={review.id} className="rounded-md border border-gray-200 bg-white p-4">
+                  <p className="font-medium text-gray-900">
+                    {(review as any).user_name || `User ${review.user_id}`}
+                  </p>
+                  <p className="mt-1 text-sm text-gray-700">{review.content}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-2 text-sm text-gray-500 italic">No reviews yet.</p>
+          )}
         </div>
 
       </div>
