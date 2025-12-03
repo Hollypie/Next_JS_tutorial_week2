@@ -298,6 +298,8 @@ export async function fetchProductById(
   id: string
 ): Promise<(Product & { reviews: (Review & { user_name: string })[] }) | null> {
   try {
+    console.log('Fetching product with id:', id);
+    
     // Fetch the product
     const productData = await sql<Product[]>`
       SELECT id, name, image_url, price, description
@@ -305,8 +307,14 @@ export async function fetchProductById(
       WHERE id = ${id}
       LIMIT 1
     `;
+    
+    console.log('Product data:', productData);
+    
     const product = productData[0];
-    if (!product) return null;
+    if (!product) {
+      console.log('No product found');
+      return null;
+    }
 
     // Fetch the reviews for this product
     const reviewsData = await sql<{
@@ -322,23 +330,29 @@ export async function fetchProductById(
       ORDER BY r.id DESC
     `;
 
+    console.log('Reviews data:', reviewsData);
+    console.log('Number of reviews found:', reviewsData.length);
+
     // Map to Review[] type with user_name
     const reviews = reviewsData.map(r => ({
       id: r.id,
       product_id: id,
       user_id: r.user_id,
       content: r.content,
-      user_name: r.user_name, // Include user_name
+      user_name: r.user_name,
     }));
 
-    // Return the product with reviews, converting price to dollars
-    return {
+    const result = {
       ...product,
       price: product.price / 100,
       reviews,
     };
+    
+    console.log('Final result:', result);
+
+    return result;
   } catch (error) {
-    console.error('Database Error:', error);
+    console.error('Database Error in fetchProductById:', error);
     throw new Error('Failed to fetch product.');
   }
 }
