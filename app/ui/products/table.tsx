@@ -3,7 +3,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { fetchFilteredProducts } from '@/app/lib/data';
 import { FormattedProductsTable } from '@/app/lib/definitions';
-import { lusitana } from '@/app/ui/fonts';
 import { UpdateProduct, DeleteProduct } from './buttons';
 
 export default async function ProductsTable({
@@ -16,17 +15,17 @@ export default async function ProductsTable({
   const products: FormattedProductsTable[] = await fetchFilteredProducts(query, currentPage);
 
   return (
-    <div className="w-full">
-      <h1 className={`${lusitana.className} mb-8 text-xl md:text-2xl`}>Products</h1>
+    <div className="mt-6 flow-root">
+      <div className="overflow-x-auto">
+        <div className="inline-block min-w-full align-middle">
+          <div className="overflow-hidden rounded-md bg-gray-50 p-2 md:pt-0">
 
-      <div className="mt-6 flow-root">
-        <div className="overflow-x-auto">
-          <div className="inline-block min-w-full align-middle">
-            <div className="overflow-hidden rounded-md bg-gray-50 p-2 md:pt-0">
-
-              {/* Mobile view */}
-              <div className="md:hidden">
-                {products.map((product) => (
+            {/* Mobile view */}
+            <div className="md:hidden">
+              {products?.length === 0 ? (
+                <p className="text-gray-500 py-4">No products found.</p>
+              ) : (
+                products.map((product) => (
                   <div
                     key={product.id}
                     className="mb-2 w-full rounded-md bg-white p-4 hover:shadow-sm transition-shadow"
@@ -37,13 +36,15 @@ export default async function ProductsTable({
                     >
                       <div className="flex items-center justify-between border-b pb-4">
                         <div className="flex items-center gap-3">
-                          <Image
-                            src={product.image_url}
-                            className="rounded-full"
-                            alt={`${product.name} product image`}
-                            width={28}
-                            height={28}
-                          />
+                          <div className="relative h-7 w-7">
+                            <Image
+                              src={product.image_url}
+                              className="rounded-full object-cover"
+                              alt={`${product.name} product image`}
+                              fill
+                              sizes="28px"
+                            />
+                          </div>
                           <p className="font-medium text-gray-900">{product.name}</p>
                         </div>
                       </div>
@@ -57,33 +58,46 @@ export default async function ProductsTable({
                       <DeleteProduct id={product.id} />
                     </div>
                   </div>
-                ))}
-              </div>
+                ))
+              )}
+            </div>
 
-              {/* Desktop table */}
-              <table className="hidden min-w-full text-gray-900 md:table">
-                <thead className="rounded-md bg-gray-50 text-left text-sm font-normal">
+            {/* Desktop table */}
+            <table className="hidden min-w-full text-gray-900 md:table">
+              <thead className="rounded-md bg-gray-50 text-left text-sm font-normal">
+                <tr>
+                  <th className="px-4 py-5 font-medium sm:pl-6">Name</th>
+                  <th className="px-3 py-5 font-medium">Price</th>
+                  <th className="relative py-3 pl-6 pr-3">
+                    <span className="sr-only">Actions</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 text-gray-900">
+                {products?.length === 0 ? (
                   <tr>
-                    <th className="px-4 py-5 font-medium sm:pl-6">Name</th>
-                    <th className="px-3 py-5 font-medium">Price</th>
-                    <th className="relative py-3 pl-6 pr-3">
-                      <span className="sr-only">Actions</span>
-                    </th>
+                    <td colSpan={3} className="text-center py-4 text-gray-500">
+                      No products found.
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200 text-gray-900">
-                  {products.map((product) => (
+                ) : (
+                  products.map((product) => (
                     <tr key={product.id} className="border-b last-of-type:border-none">
                       {/* Content Cells */}
                       <td colSpan={2} className="whitespace-nowrap bg-white">
-                        <Link href={`/dashboard/products/${product.id}`} className="flex items-center gap-3 px-4 py-5 sm:pl-6 hover:bg-gray-100 transition-colors rounded-md">
-                          <Image
-                            src={product.image_url}
-                            className="rounded-full"
-                            alt={`${product.name} product image`}
-                            width={28}
-                            height={28}
-                          />
+                        <Link 
+                          href={`/dashboard/products/${product.id}`} 
+                          className="flex items-center gap-3 px-4 py-5 sm:pl-6 hover:bg-gray-100 transition-colors rounded-md"
+                        >
+                          <div className="relative h-7 w-7 flex-shrink-0">
+                            <Image
+                              src={product.image_url}
+                              className="rounded-full object-cover"
+                              alt={`${product.name} product image`}
+                              fill
+                              sizes="28px"
+                            />
+                          </div>
                           <p className="font-medium text-gray-900">{product.name}</p>
                           <span className="ml-6 font-medium">${product.price.toFixed(2)}</span>
                         </Link>
@@ -97,11 +111,11 @@ export default async function ProductsTable({
                         </div>
                       </td>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  ))
+                )}
+              </tbody>
+            </table>
 
-            </div>
           </div>
         </div>
       </div>
