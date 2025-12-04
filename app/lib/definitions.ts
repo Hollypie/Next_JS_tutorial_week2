@@ -10,7 +10,7 @@ export type User = {
   name: string;
   email: string;
   password: string;
-  account_type: 'artisan' | 'customer'; // e.g., 'artisan' or 'customer'
+  account_type: 'artisan' | 'customer';
 };
 
 export type Product = {
@@ -19,6 +19,8 @@ export type Product = {
   image_url: string;
   price: number;
   description: string;
+  category: string;
+  seller_id: string;
 };
 
 export type Review = {
@@ -77,6 +79,8 @@ export type ProductsTable = {
   image_url: string;
   price: number;
   description: string;
+  category: string;
+  seller_id: string;
 };
 
 export type CustomersTableType = {
@@ -95,6 +99,8 @@ export type ProductsTableType = {
   image_url: string;
   price: number;
   description: string;
+  category: string;
+  seller_id: string;
 };
 
 export type FormattedCustomersTable = {
@@ -107,13 +113,15 @@ export type FormattedCustomersTable = {
   total_paid: string;
 };
 
-export type FormattedProductsTable = {
+export interface FormattedProductsTable {
   id: string;
   name: string;
   image_url: string;
   price: number;
   description: string;
-};
+  category: string;
+  seller_id: string;// optional for now
+}
 
 export type CustomerField = {
   id: string;
@@ -133,6 +141,8 @@ export type ProductForm = {
   image_url: string;
   price: number;
   description: string;
+  category: string;
+  seller_id: string;
 };
 
 export type ReviewsTableType = {

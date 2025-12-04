@@ -1,36 +1,58 @@
-import { Card } from '@/app/ui/dashboard/cards';
-import RevenueChart from '@/app/ui/dashboard/revenue-chart';
-import LatestInvoices from '@/app/ui/dashboard/latest-invoices';
-import { lusitana } from '@/app/ui/fonts';
-import { fetchCardData } from '@/app/lib/data';
-import { Suspense } from 'react';
-import { RevenueChartSkeleton, LatestInvoicesSkeleton, CardsSkeleton } from '@/app/ui/skeletons';
-import CardWrapper from '@/app/ui/dashboard/cards';
-import { Metadata } from 'next';
- 
-export const metadata: Metadata = {
-  title: 'Dashboard',
-};
+// app/dashboard/(overview)/page.tsx
+import { auth } from '@/auth';
+import { redirect } from 'next/navigation';
+import CustomerDashboard from '@/app/ui/dashboard/customer-dashboard';
+import ArtisanDashboard from '@/app/ui/dashboard/artisan-dashboard';
+import postgres from "postgres";
 
-export default async function Page() {
+const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
+
+export default async function DashboardPage() {
+  const session = await auth();
+
+  // Redirect if unauthenticated
+  if (!session?.user) {
+    redirect('/login');
+  }
+
+  const accountType = (session.user as any).accountType;
+
+  // CUSTOMER DASHBOARD LOGIC
+  if (accountType === 'customer') {
+    // Fetch all products
+    const products = await sql`SELECT * FROM products`;
+
+    // Pick a random one
+    const featuredProduct = products.length
+      ? products[Math.floor(Math.random() * products.length)]
+      : null;
+
+    // Get review count for this user (optional)
+    const userId = session.user.id!;
+    
+    const reviewRows = await sql`SELECT COUNT(*) FROM reviews WHERE user_id = ${userId}`;
+
+    const reviewCount = Number(reviewRows[0].count) || 0;
+
+    return (
+      <CustomerDashboard
+        user={session.user}
+        featuredProduct={featuredProduct}
+        reviewCount={reviewCount}
+      />
+    );
+  }
+
+  // ARTISAN DASHBOARD
+  if (accountType === 'artisan') {
+    return <ArtisanDashboard user={session.user} />;
+  }
+
+  // FALLBACK (unknown account type)
   return (
-    <main>
-      <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
-        Dashboard
-      </h1>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <Suspense fallback={<CardsSkeleton />}>
-          <CardWrapper />
-        </Suspense>
-      </div>
-      <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
-        <Suspense fallback={<RevenueChartSkeleton />}>
-          <RevenueChart />
-        </Suspense>
-        <Suspense fallback={<LatestInvoicesSkeleton />}>
-          <LatestInvoices />
-        </Suspense>
-      </div>
-    </main>
+    <div className="p-4">
+      <h1 className="text-2xl font-bold">Welcome to your dashboard</h1>
+      <p>Account type: {accountType || 'Not set'}</p>
+    </div>
   );
 }

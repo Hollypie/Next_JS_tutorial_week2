@@ -7,13 +7,25 @@ import { UpdateProduct, DeleteProduct } from './buttons';
 
 export default async function ProductsTable({
   query = '',
+  category = '',
+  minPrice = '',
+  maxPrice = '',
   currentPage = 1,
 }: {
   query?: string;
+  category?: string;
+  minPrice?: string;
+  maxPrice?: string;
   currentPage?: number;
 }) {
-  const products: FormattedProductsTable[] = await fetchFilteredProducts(query, currentPage);
-
+  const products: FormattedProductsTable[] = await fetchFilteredProducts(
+    query,
+    category,
+    minPrice,
+    maxPrice,
+    currentPage
+  );
+  
   return (
     <div className="mt-6 flow-root">
       <div className="overflow-x-auto">

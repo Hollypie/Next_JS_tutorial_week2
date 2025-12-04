@@ -13,6 +13,7 @@ import {
   InvoicesTable,
   LatestInvoiceRaw,
   Revenue,
+  FormattedProductsTable,
 } from './definitions';
 import { formatCurrency } from './utils';
 
@@ -22,32 +23,51 @@ const ITEMS_PER_PAGE = 6;
 
 export async function fetchFilteredProducts(
   query: string,
-  currentPage: number,
-) {
+  category: string,
+  minPrice: string,
+  maxPrice: string,
+  currentPage: number
+): Promise<FormattedProductsTable[]> {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
-  try {
-    const data = await sql<ProductsTable[]>`
-      SELECT
-        id,
-        name,
-        image_url,
-        price,
-        description
-      FROM products
-      WHERE
-        name ILIKE ${`%${query}%`} OR
-        price::text ILIKE ${`%${query}%`}
-      ORDER BY name ASC
-      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset};
-    `;
+  // Build dynamic SQL filters (just JS strings)
+  let filters = sql`(p.name ILIKE ${'%' + query + '%'} OR p.description ILIKE ${'%' + query + '%'})`;
 
-    return data; // postgres returns an array directly
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch products.");
+  if (category.trim() !== "") {
+    filters = sql`${filters} AND c.name = ${category}`;
   }
+
+  if (minPrice.trim() !== "") {
+    filters = sql`${filters} AND p.price >= ${Number(minPrice)}`;
+  }
+
+  if (maxPrice.trim() !== "") {
+    filters = sql`${filters} AND p.price <= ${Number(maxPrice)}`;
+  }
+
+  const results: FormattedProductsTable[] = await sql<FormattedProductsTable[]>`
+  SELECT
+    p.id,
+    p.name,
+    p.description,
+    p.price,
+    p.image_url,
+    p.category
+  FROM products p
+  WHERE
+    (p.name ILIKE ${'%' + query + '%'} OR p.description ILIKE ${'%' + query + '%'})
+    AND (${category} = '' OR p.category = ${category})
+    AND (${minPrice} = '' OR p.price >= ${Number(minPrice)})
+    AND (${maxPrice} = '' OR p.price <= ${Number(maxPrice)})
+  LIMIT ${ITEMS_PER_PAGE}
+  OFFSET ${offset};
+`;
+
+  return results;
 }
+
+
+
 
 export async function fetchProductsPages(query: string) {
   try {

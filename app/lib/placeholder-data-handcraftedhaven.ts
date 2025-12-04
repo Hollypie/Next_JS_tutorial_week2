@@ -75,7 +75,6 @@ const users: User[] = [
 ];
 
 // --- Products ---
-// --- Products ---
 const products: Product[] = [
   {
     id: 'a1111111-1111-1111-1111-111111111111',
@@ -83,7 +82,9 @@ const products: Product[] = [
     image_url: '/products/wooden-bowl.jpg',
     price: 4500,
     description:
-      'A beautifully handcrafted wooden bowl made from sustainably sourced hardwood. Each piece is carved, sanded, and finished by hand, creating a smooth, natural texture perfect for serving or display.'
+      'A beautifully handcrafted wooden bowl made from sustainably sourced hardwood. Each piece is carved, sanded, and finished by hand, creating a smooth, natural texture perfect for serving or display.',
+    category: 'home',
+    seller_id: '1f5c8b32-1d2a-4d57-9b8a-1e6b0f9a2a01', // Olivia Woodcraft
   },
   {
     id: 'b2222222-2222-2222-2222-222222222222',
@@ -91,7 +92,9 @@ const products: Product[] = [
     image_url: '/products/leather-journal.jpg',
     price: 3200,
     description:
-      'A premium handcrafted leather journal featuring thick, lay-flat pages ideal for sketching, writing, or daily reflections. The natural leather cover ages beautifully, developing a unique patina over time.'
+      'A premium handcrafted leather journal featuring thick, lay-flat pages ideal for sketching, writing, or daily reflections. The natural leather cover ages beautifully, developing a unique patina over time.',
+    category: 'other',
+    seller_id: '2a7f9c21-3e4b-4d67-bc1d-3f8c2a9e7f22', // Liam Leatherworks
   },
   {
     id: 'c3333333-3333-3333-3333-333333333333',
@@ -99,7 +102,9 @@ const products: Product[] = [
     image_url: '/products/ceramic-vase.jpg',
     price: 5200,
     description:
-      'A hand-thrown ceramic vase glazed in earthy, warm tones. Its organic silhouette and subtle variations make it a perfect centerpiece for fresh florals or decorative greenery.'
+      'A hand-thrown ceramic vase glazed in earthy, warm tones. Its organic silhouette and subtle variations make it a perfect centerpiece for fresh florals or decorative greenery.',
+    category: 'home',
+    seller_id: '3c9d7e45-6f8a-4a21-a5d7-9c0e1f2b3d34', // Sophia Stonecraft
   },
   {
     id: 'd4444444-4444-4444-4444-444444444444',
@@ -107,7 +112,9 @@ const products: Product[] = [
     image_url: '/products/knitted-scarf.jpg',
     price: 2800,
     description:
-      'A cozy, hand-knitted scarf created with soft, high-quality yarn. Its timeless pattern and gentle drape make it an essential accessory for cooler seasons.'
+      'A cozy, hand-knitted scarf created with soft, high-quality yarn. Its timeless pattern and gentle drape make it an essential accessory for cooler seasons.',
+    category: 'clothing',
+    seller_id: '1f5c8b32-1d2a-4d57-9b8a-1e6b0f9a2a01', // Olivia Woodcraft
   },
   {
     id: 'e5555555-5555-5555-5555-555555555555',
@@ -115,10 +122,56 @@ const products: Product[] = [
     image_url: '/products/handcrafted-candle.jpg',
     price: 1500,
     description:
-      'A small-batch, hand-poured candle made with natural wax and infused with subtle botanical fragrances. Designed to bring warmth and calm to any space.'
-  }
+      'A small-batch, hand-poured candle made with natural wax and infused with subtle botanical fragrances. Designed to bring warmth and calm to any space.',
+    category: 'home',
+    seller_id: '2a7f9c21-3e4b-4d67-bc1d-3f8c2a9e7f22', // Liam Leatherworks
+  },
+  {
+    id: 'f6666666-6666-6666-6666-666666666666',
+    name: 'Silver Pendant Necklace',
+    image_url: '/products/silver-pendant.jpg',
+    price: 3800,
+    description: 'A delicate silver pendant necklace handcrafted with precision and care.',
+    category: 'jewelry',
+    seller_id: '3c9d7e45-6f8a-4a21-a5d7-9c0e1f2b3d34', // Sophia Stonecraft
+  },
+  {
+    id: 'a7777777-7777-7777-7777-777777777777', // Keep it in hex range
+    name: 'Watercolor Print - Sunset',
+    image_url: '/products/watercolor-sunset.jpg',
+    price: 2400,
+    description: 'A vibrant watercolor print of a sunset, perfect for framing and gifting.',
+    category: 'art',
+    seller_id: '1f5c8b32-1d2a-4d57-9b8a-1e6b0f9a2a01',
+  },
+  {
+    id: 'b8888888-8888-8888-8888-888888888888',
+    name: 'Woolen Beanie',
+    image_url: '/products/woolen-beanie.jpg',
+    price: 1800,
+    description: 'A soft, warm woolen beanie for cozy winter days.',
+    category: 'clothing',
+    seller_id: '2a7f9c21-3e4b-4d67-bc1d-3f8c2a9e7f22',
+  },
+  {
+    id: 'c9999999-9999-9999-9999-999999999999',
+    name: 'Hand-Painted Ceramic Mug',
+    image_url: '/products/ceramic-mug.jpg',
+    price: 2200,
+    description: 'A hand-painted ceramic mug with a unique artistic design.',
+    category: 'home',
+    seller_id: '3c9d7e45-6f8a-4a21-a5d7-9c0e1f2b3d34',
+  },
+  {
+    id: 'da000000-0000-0000-0000-000000000000',
+    name: 'Leather Bookmark',
+    image_url: '/products/leather-bookmark.jpg',
+    price: 900,
+    description: 'A handcrafted leather bookmark, perfect for readers and gift-giving.',
+    category: 'other',
+    seller_id: '410544b2-4001-4271-9855-fec4b6a6442a',
+  },
 ];
-
 
 // --- Reviews ---
 const reviews: Review[] = [

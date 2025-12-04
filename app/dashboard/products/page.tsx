@@ -18,17 +18,29 @@ export default async function ProductsPage(props: {
   searchParams?: Promise<{
     query?: string;
     page?: string;
+    category?: string;
+    minPrice?: string;
+    maxPrice?: string;
   }>;
 }) {
+
   const searchParams = await props.searchParams;
+
+  // Existing
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
 
-  // Fetch total pages for pagination
+  // NEW — add filter params here
+  const category = searchParams?.category || '';
+  const minPrice = searchParams?.minPrice || '';
+  const maxPrice = searchParams?.maxPrice || '';
+
   const totalPages = await fetchProductsPages(query);
 
   return (
     <div className="w-full">
+
+      {/* Page Title */}
       <div className="flex w-full items-center justify-between">
         <h1 className={`${lusitana.className} text-2xl`}>Products</h1>
       </div>
@@ -39,15 +51,86 @@ export default async function ProductsPage(props: {
         <CreateProduct />
       </div>
 
-      {/* Products Table with Suspense */}
-      <Suspense key={query + currentPage} fallback={<ProductsTableSkeleton />}>
-        <ProductsTable query={query} currentPage={currentPage} />
+      {/* Filter Form */}
+      <form
+        className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4 bg-gray-50 p-4 rounded-xl"
+        action="/dashboard/products"
+        method="get"
+      >
+        {/* Category Filter */}
+        <div className="flex flex-col">
+          <label className="text-sm font-medium text-gray-700 mb-1">Category</label>
+          <select
+            name="category"
+            defaultValue={category}
+            className="rounded-md border border-gray-300 p-2"
+          >
+            <option value="">All</option>
+            <option value="jewelry">Jewelry</option>
+            <option value="art">Art</option>
+            <option value="home">Home Decor</option>
+            <option value="clothing">Clothing</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        {/* Min Price */}
+        <div className="flex flex-col">
+          <label className="text-sm font-medium text-gray-700 mb-1">Min Price</label>
+          <input
+            type="number"
+            name="minPrice"
+            defaultValue={minPrice}
+            placeholder="0"
+            className="rounded-md border border-gray-300 p-2"
+            min="0"
+          />
+        </div>
+
+        {/* Max Price */}
+        <div className="flex flex-col">
+          <label className="text-sm font-medium text-gray-700 mb-1">Max Price</label>
+          <input
+            type="number"
+            name="maxPrice"
+            defaultValue={maxPrice}
+            placeholder="999"
+            className="rounded-md border border-gray-300 p-2"
+            min="0"
+          />
+        </div>
+
+        {/* Submit Button */}
+        <div className="flex items-end">
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+          >
+            Apply Filters
+          </button>
+        </div>
+      </form>
+
+      {/* TABLE + Pagination */}
+      <Suspense
+        key={query + currentPage + category + minPrice + maxPrice}
+        fallback={<ProductsTableSkeleton />}
+      >
+        <ProductsTable
+          query={query}
+          currentPage={currentPage}
+          category={category}
+          minPrice={minPrice}
+          maxPrice={maxPrice}
+        />
       </Suspense>
 
-      {/* Pagination */}
       <div className="mt-5 flex w-full justify-center">
         <Pagination totalPages={totalPages} />
       </div>
+
+      
+
     </div>
   );
 }

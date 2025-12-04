@@ -1,5 +1,4 @@
-import NextAuth from "next-auth";
-import { authConfig } from "../../../../auth.config"; // adjust relative path
+// app/api/auth/[...nextauth]/route.ts
+import { handlers } from "@/auth";
 
-export const GET = NextAuth(authConfig);
-export const POST = NextAuth(authConfig);
+export const { GET, POST } = handlers;

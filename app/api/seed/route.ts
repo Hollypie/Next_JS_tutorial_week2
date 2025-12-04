@@ -1,6 +1,7 @@
+// app/api/seed/route.ts (or wherever your seed file is)
 // cSpell:ignore handcraftedhaven
 
-import bcrypt from 'bcrypt';
+import bcryptjs from 'bcryptjs'; // Changed from bcrypt
 import postgres from 'postgres';
 import { users, products, reviews } from '../../lib/placeholder-data-handcraftedhaven';
 
@@ -26,7 +27,7 @@ async function seedUsers() {
   let inserted = 0;
 
   for (const user of users) {
-    const hashedPassword = await bcrypt.hash(user.password, 10);
+    const hashedPassword = await bcryptjs.hash(user.password, 10);
     const result = await sql`
       INSERT INTO users (id, name, email, password, account_type)
       VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword}, ${user.account_type})
@@ -51,16 +52,21 @@ async function seedProducts() {
       name TEXT NOT NULL,
       image_url TEXT NOT NULL,
       price INT NOT NULL,
-      description TEXT NOT NULL
+      description TEXT NOT NULL,
+      category TEXT NOT NULL,
+      seller_id UUID REFERENCES users(id)
     );
   `;
 
   let inserted = 0;
 
   for (const product of products) {
+    // Ensure all fields are defined
+    const { id, name, image_url, price, description, category, seller_id } = product;
+    
     const result = await sql`
-      INSERT INTO products (id, name, image_url, price, description)
-      VALUES (${product.id}, ${product.name}, ${product.image_url}, ${product.price}, ${product.description})
+      INSERT INTO products (id, name, image_url, price, description, category, seller_id)
+      VALUES (${id}, ${name}, ${image_url}, ${price}, ${description}, ${category}, ${seller_id})
       ON CONFLICT (id) DO NOTHING;
     `;
     inserted += result.count;
@@ -106,7 +112,7 @@ async function seedReviews() {
 export async function GET() {
   const logs: string[] = [];
 
-  // Monkey-patch console.log so we can send logs back in the response
+  // Monkey-patch console.log so we can capture logs
   const originalLog = console.log;
   console.log = (msg: any) => {
     logs.push(String(msg));
